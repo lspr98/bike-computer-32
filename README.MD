@@ -7,7 +7,7 @@ A simple mini-map based on an ESP32C3 for cycling. Renders a map based on the cu
 ![](./hardware/images/usage.jpg) 
 ![](./hardware/images/mock_gnss_example.gif)
 
-Even though the GIF is low-framerate, it ESP can easily render the map at 60 FPS if the currently shown part of the map isn't too busy.
+Even though the GIF is low-framerate, the ESP can easily render the map at 60 FPS if the currently shown part of the map isn't too busy.
 
 The motivation behind this project was to create a cheap (~50€) device that displays a komoot gpx track as an overlay over a map for cycling. It has to work without a smartphone, be readable in direct sunlight and last a couple of hours in terms of battery.
 
