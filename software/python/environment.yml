@@ -1,0 +1,6 @@
+name: bike-companion-32
+
+dependencies:
+  - numpy
+  - matplotlib
+  - jupyter

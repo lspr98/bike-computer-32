@@ -1,0 +1,9 @@
+*.pbf
+*.osm
+*.bin
+*.gpx
+**/.pio
+**/.vscode
+**/build
+**/__pycache__
+**/.ipynb_checkpoints
