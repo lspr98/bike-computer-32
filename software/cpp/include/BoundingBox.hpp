@@ -78,7 +78,7 @@ class WayBox : public BoundingBox {
         };
 
         // Calculate the number of tiles that collide with the bounding box
-        int get_n_colliding_tiles(u_int64_t tile_size, u_int64_t n_x_tiles, int map_x, int map_y) {
+        int get_n_colliding_tiles(int tile_size, u_int64_t n_x_tiles, int map_x, int map_y) {
             int offset_ll_x = lower_x - map_x;
             int offset_ll_y = lower_y - map_y;
             int offset_ur_x = upper_x - map_x;

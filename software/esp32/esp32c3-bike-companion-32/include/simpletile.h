@@ -14,8 +14,8 @@ namespace SimpleTile {
 
     // Header struct for map meta-data
     struct Header {
-        uint64_t map_x;
-        uint64_t map_y;
+        int64_t map_x;
+        int64_t map_y;
         uint64_t map_width;
         uint64_t map_height;
         uint64_t n_x_tiles;

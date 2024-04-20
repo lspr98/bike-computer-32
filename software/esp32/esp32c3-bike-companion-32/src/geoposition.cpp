@@ -6,7 +6,7 @@ GeoPosition::GeoPosition() : _x(0), _y(0) {
     mercatorToWGS(_x, _y, &_lat, &_lon);
 }
 
-GeoPosition::GeoPosition(uint64_t x, uint64_t y) : _x(x), _y(y) {
+GeoPosition::GeoPosition(int64_t x, int64_t y) : _x(x), _y(y) {
     mercatorToWGS(x, y, &_lat, &_lon);
 }
 
@@ -14,7 +14,7 @@ GeoPosition::GeoPosition(double lat, double lon) : _lat(lat), _lon(lon) {
     WGSToMercator(lat, lon, &_x, &_y);
 }
 
-void GeoPosition::updatePosition(uint64_t x, uint64_t y) {
+void GeoPosition::updatePosition(int64_t x, int64_t y) {
     _x = x;
     _y = y;
     mercatorToWGS(x, y, &_lat, &_lon);
@@ -28,7 +28,7 @@ void GeoPosition::updatePosition(double lat, double lon) {
 
 // TODO: Include libosmium license
 // This conversion is taken from libosimum
-void GeoPosition::mercatorToWGS(uint64_t x, uint64_t y, double* latBuf, double* lonBuf) {
+void GeoPosition::mercatorToWGS(int64_t x, int64_t y, double* latBuf, double* lonBuf) {
     *lonBuf = (double) (RAD_TO_DEG*((double) x) / R_EARTH);
     *latBuf = (double) (RAD_TO_DEG*(2* atan(exp(((double) y) / R_EARTH))));
 };
@@ -36,9 +36,9 @@ void GeoPosition::mercatorToWGS(uint64_t x, uint64_t y, double* latBuf, double* 
 
 // TODO: Include libosmium license
 // This conversion is taken from libosimum
-void GeoPosition::WGSToMercator(double lat, double lon, uint64_t* xBuf, uint64_t* yBuf) {
-    *xBuf = (uint64_t) (R_EARTH * DEG_TO_RAD * lon);
-    *yBuf = (uint64_t) R_EARTH *
+void GeoPosition::WGSToMercator(double lat, double lon, int64_t* xBuf, int64_t* yBuf) {
+    *xBuf = (int64_t) (R_EARTH * DEG_TO_RAD * lon);
+    *yBuf = (int64_t) R_EARTH *
                     ((((((((((-3.1112583378460085319e-23  * lat +
                                2.0465852743943268009e-19) * lat +
                                6.4905282018672673884e-18) * lat +
@@ -63,8 +63,8 @@ void GeoPosition::WGSToMercator(double lat, double lon, uint64_t* xBuf, uint64_t
 };
 
 
-uint64_t GeoPosition::x() { return _x; };
-uint64_t GeoPosition::y() { return _y; };
+int64_t GeoPosition::x() { return _x; };
+int64_t GeoPosition::y() { return _y; };
 
 double GeoPosition::lat() { return _lat; };
 double GeoPosition::lon() { return _lon; };
@@ -83,7 +83,7 @@ LocalGeoPosition::LocalGeoPosition(GeoPosition& globalPos, SimpleTile::Header* m
 };
 
 
-LocalGeoPosition::LocalGeoPosition(uint64_t xGlobal, uint64_t yGlobal, SimpleTile::Header* mapHeader)
+LocalGeoPosition::LocalGeoPosition(int64_t xGlobal, int64_t yGlobal, SimpleTile::Header* mapHeader)
     : _header(mapHeader), GeoPosition(xGlobal, yGlobal) {
 
     // calculate tileID
@@ -133,11 +133,11 @@ uint64_t LocalGeoPosition::getTileID(GeoPosition& globalPos, SimpleTile::Header*
 
 };
 
-uint64_t LocalGeoPosition::getTileID(uint64_t xGlob, uint64_t yGlob, uint64_t xMap, uint64_t yMap, uint64_t tileSize, uint64_t nXTiles) {
+uint64_t LocalGeoPosition::getTileID(int64_t xGlob, int64_t yGlob, int64_t xMap, int64_t yMap, uint64_t tileSize, uint64_t nXTiles) {
 
     // Note: Flooring operation is replaced by integer divisions as we deal with non-negative indices
-    return nXTiles*((uint64_t) ((yGlob - yMap) / tileSize)) + 
-            (uint64_t) ((xGlob - xMap) / tileSize);
+    return nXTiles*((int64_t) ((yGlob - yMap) / tileSize)) + 
+            (int64_t) ((xGlob - xMap) / tileSize);
 
 };
 
@@ -146,14 +146,14 @@ uint64_t LocalGeoPosition::tileId() {
 };
 
 // Get global coordinates of lower left corner for a tile based on ID
-void LocalGeoPosition::getTileLL(uint64_t tileId, SimpleTile::Header* mapHeader, uint64_t* tileOriginXBuf, uint64_t* tileOriginYBuf) {
+void LocalGeoPosition::getTileLL(uint64_t tileId, SimpleTile::Header* mapHeader, int64_t* tileOriginXBuf, int64_t* tileOriginYBuf) {
 
     getTileLL(tileId, mapHeader->tile_size, mapHeader->n_x_tiles, mapHeader->map_x, mapHeader->map_y, tileOriginXBuf, tileOriginYBuf);
 
 };
 
 // Get global coordinates of lower left corner for a tile based on ID
-void LocalGeoPosition::getTileLL(uint64_t tileId, uint64_t tileSize, uint64_t nXTiles, uint64_t xMap, uint64_t yMap, uint64_t* tileOriginXBuf, uint64_t* tileOriginYBuf) {
+void LocalGeoPosition::getTileLL(uint64_t tileId, uint64_t tileSize, uint64_t nXTiles, int64_t xMap, int64_t yMap, int64_t* tileOriginXBuf, int64_t* tileOriginYBuf) {
     
     // Note: Flooring operation is replaced by integer divisions as we deal with non-negative indices
     *tileOriginXBuf = (tileId % nXTiles) * tileSize + xMap;

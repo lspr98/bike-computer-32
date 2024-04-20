@@ -144,7 +144,7 @@ void TileBlockRenderer::render(LocalGeoPosition& center) {
     int x0, y0, x1, y1;
 
     int curr_tile_offset_x, curr_tile_offset_y;
-    uint64_t curr_tile_LL_x, curr_tile_LL_y;
+    int64_t curr_tile_LL_x, curr_tile_LL_y;
 
     int disp_LL_x, disp_LL_y, disp_UR_x, disp_UR_y;
 
@@ -232,7 +232,7 @@ void TileBlockRenderer::renderGPX(LocalGeoPosition& center) {
     int x0, y0, x1, y1;
 
     int curr_tile_offset_x, curr_tile_offset_y, next_tile_offset_x, next_tile_offset_y;
-    uint64_t curr_tile_LL_x, curr_tile_LL_y, next_tile_LL_x, next_tile_LL_y;
+    int64_t curr_tile_LL_x, curr_tile_LL_y, next_tile_LL_x, next_tile_LL_y;
 
     for(int tidx=0; tidx<N_RENDER_TILES; tidx++) {
         for(uint32_t nidx=0; nidx<(_track->numNodes - 1); nidx++) {

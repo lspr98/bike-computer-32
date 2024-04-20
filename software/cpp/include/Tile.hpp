@@ -43,8 +43,10 @@ public:
         if(!x_local && !y_local) x_local++;
 
         // At least one local coordinate must be positive (otherwise it is reserved for way metadata)
-        assert(x_local > 0 || y_local > 0);
-
+        if(x_local < 0 && y_local < 0) {
+            std::cout << "Warning: Skipping negative coordinates.\n";
+            return;
+        }
         // Must not be out-of-range before conversion
         assert(x_local < INT16_MAX && x_local > INT16_MIN);
         assert(y_local < INT16_MAX && y_local > INT16_MIN);

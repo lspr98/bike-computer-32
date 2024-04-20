@@ -229,7 +229,8 @@ def read_header(binary_path):
         # Parse header
         for i in range(10):
             bytes_read = f.read(8)
-            header[header_keys[i]] = int.from_bytes(bytes_read, byteorder='little', signed=False)
+            is_signed = header_keys[i] in ["map_x", "ma_y"]
+            header[header_keys[i]] = int.from_bytes(bytes_read, byteorder='little', signed=is_signed)
 
     return header
 

@@ -43,8 +43,8 @@ int main(int argc, char *argv[]) {
     uint64_t* ptr_per_tile;
 
     // Buffers to store coordinates and IDs
-    uint32_t* node_x_coords;
-    uint32_t* node_y_coords;
+    int32_t* node_x_coords;
+    int32_t* node_y_coords;
     uint64_t* highway_indices;
 
     // Read OSM input file
@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
 
     // Fourth pass. Get all mercator coordinates of all highways
     std::cout << "-------------------------- 4/6 Converting coordinates --------------------------\n";
-    node_x_coords = new uint32_t[all_way_node_count];
-    node_y_coords = new uint32_t[all_way_node_count];
+    node_x_coords = new int32_t[all_way_node_count];
+    node_y_coords = new int32_t[all_way_node_count];
     highway_indices = new uint64_t[highways];
     osmium::io::Reader reader4{input_file, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
     MercatorConverter mercConv(node_x_coords, node_y_coords, highway_indices);
@@ -196,8 +196,8 @@ int main(int argc, char *argv[]) {
     //  max_nodes   uint64  largest number of nodes on single tile
     //  n_nodes     uint64  number of nodes, including separators
     //  n_ways      uint64  number of ways
-    buffer_header[0] = (uint64_t) map_x;
-    buffer_header[1] = (uint64_t) map_y;
+    buffer_header[0] = (int64_t) map_x;
+    buffer_header[1] = (int64_t) map_y;
     buffer_header[2] = (uint64_t) map_width;
     buffer_header[3] = (uint64_t) map_height;
     buffer_header[4] = (uint64_t) n_x_tiles;

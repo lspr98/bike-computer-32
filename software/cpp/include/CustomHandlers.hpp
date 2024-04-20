@@ -26,10 +26,10 @@ struct StatHandler : public osmium::handler::Handler {
     int min_way_id          = 1206467986;
     int max_way_id          = 0;
     // Minimum and maximum coordinates
-    uint64_t min_x          = 1e10;
-    uint64_t min_y          = 1e10;
-    uint64_t max_x          = 0;
-    uint64_t max_y          = 0;
+    int64_t min_x          = 1e10;
+    int64_t min_y          = 1e10;
+    int64_t max_x          = 0;
+    int64_t max_y          = 0;
     double min_lat          = 1e10;
     double max_lat          = 0;
     double min_lon          = 1e10;
@@ -183,7 +183,7 @@ struct TileAssigner : public osmium::handler::Handler {
             // Get colliding tile indices
             curr_wBox.get_colliding_tiles(_tile_size, _n_x_tiles, _map_x, _map_y, idx_arr);
             // idx_arr now contains the indices for all colliding tiles.
-            
+
             // Find containing nodes for each colliding tile
             // i iterates over all potentially colliding tiles.
             for(int i=0; i<n_idx_curr; i++) {
@@ -256,13 +256,13 @@ struct TileAssigner : public osmium::handler::Handler {
 */
 struct MercatorConverter : public osmium::handler::Handler {
 
-    uint32_t* _node_x_coords;
-    uint32_t* _node_y_coords;
+    int32_t* _node_x_coords;
+    int32_t* _node_y_coords;
     uint64_t* _highway_indices;
     int _way_cnt;
     uint64_t _coord_ptr;
 
-    MercatorConverter(uint32_t* node_x_coords, uint32_t* node_y_coords, uint64_t* highway_indices) :
+    MercatorConverter(int32_t* node_x_coords, int32_t* node_y_coords, uint64_t* highway_indices) :
         _node_x_coords(node_x_coords), _node_y_coords(node_y_coords), _highway_indices(highway_indices), _way_cnt(0), _coord_ptr(0) {};
 
     void way(const osmium::Way& way) noexcept {
@@ -275,6 +275,12 @@ struct MercatorConverter : public osmium::handler::Handler {
             // Iterate over all remaining nodes in the highway
             auto it = way.nodes().begin();
             for(uint64_t i=0; i<way.nodes().size(); i++) {
+                // double x = osmium::geom::detail::lon_to_x(it->lon());
+                // double y = osmium::geom::detail::lat_to_y(it->lat());
+                // if(x < 0 || y < 0) {
+                //     std::cout << "x: " << x << ", y: " << y << "\n";
+                //     exit(1);
+                // }
                 _node_x_coords[_coord_ptr] = osmium::geom::detail::lon_to_x(it->lon());
                 _node_y_coords[_coord_ptr] = osmium::geom::detail::lat_to_y(it->lat());
 

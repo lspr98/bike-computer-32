@@ -34,8 +34,8 @@ bool InterpPositionProvider::step() {
     // Interpolate
     float perc = ((float) _cnt) / ((float) _nInterpolation);
 
-    uint64_t x_new = _lastPos.x() + _nextPos.x() * perc - _lastPos.x() * perc;
-    uint64_t y_new = _lastPos.y() + _nextPos.y() * perc - _lastPos.y() * perc;
+    int64_t x_new = _lastPos.x() + _nextPos.x() * perc - _lastPos.x() * perc;
+    int64_t y_new = _lastPos.y() + _nextPos.y() * perc - _lastPos.y() * perc;
     
     _currHeading = _lastHeading + (_nextHeading - _lastHeading) * perc;
     _currPos.updatePosition(x_new, y_new);
