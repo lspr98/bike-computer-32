@@ -198,14 +198,10 @@ bool SharedSPISDCard::readGPX(SimpleTile::Header& header, GPXTrack& track) {
         }
     };
 
-    sout << "Free heap before GPX: " <= ESP.getFreeHeap();
-
     // Allocate memory for track data
     track.tileIdList = new uint64_t[n_nodes];
     track.xList = new int16_t[n_nodes];
     track.yList = new int16_t[n_nodes];
-
-    sout << "Free heap after GPX: " << ESP.getFreeHeap();
 
 
     double lat, lon;
@@ -258,7 +254,7 @@ bool SharedSPISDCard::readGPX(SimpleTile::Header& header, GPXTrack& track) {
 
     track.numNodes = n_nodes;
     
-    sout << "Track has " << n_nodes <= "nodes";
+    sout.info() << "Initialized GPX-Track with " << n_nodes <= " nodes";
     // Read all nodes. For each node we get the tile. 
     return true;
 }

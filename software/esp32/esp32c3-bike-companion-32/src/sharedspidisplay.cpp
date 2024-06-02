@@ -40,8 +40,9 @@ void SharedSPIDisplay::initialize() {
     SMUTEX.aquireSPI(this);
     while(!disp.begin()) {
         delay(100);
+        sout.err() <= "Could not find display";
     }
-    sout <= "Found display.";
+    sout.info() <= "Found display";
     // Update Bootscreen status
     BOOTSCREEN.displayOK = true;
     // Set display and screen for UI renderer

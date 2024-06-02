@@ -32,6 +32,8 @@ public:
 
     Serout& err();
 
+    Serout& info();
+
 };
 
 extern Serout sout;

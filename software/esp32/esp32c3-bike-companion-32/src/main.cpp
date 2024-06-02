@@ -56,8 +56,8 @@ void setup() {
   SPI.begin();
   Serial.begin(9600);
 
-  sout <= "Bike-Companion-32";
-  sout << "Build-date: " <= __DATE__;
+  sout.info() <= "Bike-Companion-32";
+  sout.info() << "Build-date: " <= __DATE__;
   
   display.initialize();
   gnss.initialize();
@@ -67,18 +67,26 @@ void setup() {
   while(!sdcard.readHeader(header)) {
     UIRENDERER.delay(100);
   }
-  BOOTSCREEN.mapOK = true;
   UIRENDERER.step();
   if(sdcard.readGPX(header, track)) {
     UIRENDERER.setGPXTrackIn(&track);
     BOOTSCREEN.trackOK = true;
   } else {
+    // Track could not be initialized. Setup continues.
     BOOTSCREEN.trackOK = -1;
     UIRENDERER.delay(500);
   }
   UIRENDERER.setHeader(&header);
   UIRENDERER.setGNSS(&gnss);
-  UIRENDERER.initializeMap(&sdcard);
+  if(!UIRENDERER.initializeMap(&sdcard)){
+    // Map could not be initialized due to insufficient memory. Setup stops.
+    BOOTSCREEN.mapOK = -1;
+    while(1) {
+      UIRENDERER.delay(1000);
+    }
+  } else {
+    BOOTSCREEN.mapOK = true;
+  }
   UIRENDERER.setPositionProvider(&ipos);
   
   // Setup was successful. Render some more frames of the bootscreen to show it.

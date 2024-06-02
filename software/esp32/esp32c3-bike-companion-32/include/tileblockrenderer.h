@@ -43,7 +43,7 @@ private:
 public:
     TileBlockRenderer();
 
-    void initialize(SimpleTile::Header* mapHeader, SharedSPISDCard* sd, SharedSPIDisplay* display);
+    bool initialize(SimpleTile::Header* mapHeader, SharedSPISDCard* sd, SharedSPIDisplay* display);
     void setPositionProvider(GeoPositionProvider* newPositionProvider);
     void setGPXTrackIn(GPXTrack* track);
     void setZoom(float newZoomLevel);

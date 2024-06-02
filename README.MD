@@ -57,6 +57,9 @@ All you need to do is mount the device to your bike and connect it to a power so
 
 The device will automatically power on. It does a small self check on boot and then enters fixing mode, where it remains until it receives a valid position fix from the GNSS module. The map with the current position is only rendered if there is a valid position fix, otherwise it will show "Fixing...".
 
+## Troubleshooting
+If the device encounters an issue during boot (e.g. one component shows **ER**), check the serial monitor for log messages.
+
 ## CAD Credits
 The 3D-models for the ESP32C3 are from GrabCAD:
 

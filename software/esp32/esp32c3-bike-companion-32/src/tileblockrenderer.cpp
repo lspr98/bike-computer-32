@@ -35,7 +35,7 @@ TileBlockRenderer::TileBlockRenderer()
     _zoomLevel = DETAULT_ZOOM_LEVEL;
 }
 
-void TileBlockRenderer::initialize(SimpleTile::Header* mapHeader, SharedSPISDCard* sd, SharedSPIDisplay* display) {
+bool TileBlockRenderer::initialize(SimpleTile::Header* mapHeader, SharedSPISDCard* sd, SharedSPIDisplay* display) {
     _header = mapHeader;
     _sd = sd;
     _display = display;
@@ -43,9 +43,24 @@ void TileBlockRenderer::initialize(SimpleTile::Header* mapHeader, SharedSPISDCar
     // Allocate buffer for tile data.
     // A tile can have at most mapHeader.max_nodes nodes, each consisting of 2 16-bit numbers.
     // Since we load at maximum N_RENDER_TILES tiles, we need size for max_nodes*max_tiles*2 16-bit numbers.
+    // Get maximum number of coordinates in each tile
     _perTileBufferSize = _header->max_nodes * 2;
-    _renderTileData = new int16_t[_perTileBufferSize * N_RENDER_TILES] {0};
-    _hasHeader = true;
+    // Calculate memory required for buffer
+    int n_alloc = _perTileBufferSize * N_RENDER_TILES * sizeof(int16_t);
+    // Check if there is enough memory available
+    if ((n_alloc + MIN_FREE_HEAP) > ESP.getFreeHeap()) {
+        // Not enough memory available. Print log and return error
+        sout.err() << "Insufficient memory for map buffer. " 
+                    << ESP.getFreeHeap() << "bytes avaiable, "
+                    << (n_alloc + MIN_FREE_HEAP) <= "bytes required.";
+        return false;
+    } else {
+        // Enough memory avaiable. Initialize buffer and return success
+        _renderTileData = new int16_t[_perTileBufferSize * N_RENDER_TILES] {0};
+        _hasHeader = true;
+        return true;
+    }
+    
 }
 
 void TileBlockRenderer::setPositionProvider(GeoPositionProvider* newPositionProvider) {

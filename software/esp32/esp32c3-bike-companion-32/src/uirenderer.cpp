@@ -16,7 +16,9 @@ UIRenderer::UIRenderer() :
 
 bool UIRenderer::initializeMap(SharedSPISDCard* sd) {
     if(_hasHeader) {
-        _mapRenderer.initialize(_header, sd, _disp);
+        if(!_mapRenderer.initialize(_header, sd, _disp)) {
+            return false;
+        }
         if(_hasPositionProvider) {
             _mapRenderer.setPositionProvider(_posProvider);
         }

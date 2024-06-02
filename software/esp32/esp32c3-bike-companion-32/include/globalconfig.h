@@ -67,6 +67,9 @@
 // Minimum time between two consecutive tile data updates in milliseconds.
 #define TILE_UPDATE_DEBOUNCE_MS 5000
 
+// Minimum free heap memory required after tile buffer allocation
+#define MIN_FREE_HEAP 10000
+
 
 /**
  * 
