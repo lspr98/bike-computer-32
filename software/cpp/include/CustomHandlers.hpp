@@ -28,12 +28,12 @@ struct StatHandler : public osmium::handler::Handler {
     // Minimum and maximum coordinates
     int64_t min_x          = 1e10;
     int64_t min_y          = 1e10;
-    int64_t max_x          = 0;
-    int64_t max_y          = 0;
+    int64_t max_x          = -1e10;
+    int64_t max_y          = -1e10;
     double min_lat          = 1e10;
-    double max_lat          = 0;
+    double max_lat          = -1e10;
     double min_lon          = 1e10;
-    double max_lon          = 0;
+    double max_lon          = -1e10;
     // Maximum number of nodes in a way, all nodes for all ways
     int max_way_node_count = 0;
     int all_way_node_count = 0;
@@ -175,6 +175,9 @@ struct TileAssigner : public osmium::handler::Handler {
             }
             // Get bounding box of current way
             auto curr_wBox = _wBoxes[_way_cnt];
+            // Check that way ID matches bounding box ID
+            assert(curr_wBox.way_id == way.id());
+
             // Get number of colliding tiles
             n_idx_curr = curr_wBox.get_n_colliding_tiles(_tile_size, _n_x_tiles, _map_x, _map_y);
             // Allocate memory for tile indices
@@ -275,12 +278,6 @@ struct MercatorConverter : public osmium::handler::Handler {
             // Iterate over all remaining nodes in the highway
             auto it = way.nodes().begin();
             for(uint64_t i=0; i<way.nodes().size(); i++) {
-                // double x = osmium::geom::detail::lon_to_x(it->lon());
-                // double y = osmium::geom::detail::lat_to_y(it->lat());
-                // if(x < 0 || y < 0) {
-                //     std::cout << "x: " << x << ", y: " << y << "\n";
-                //     exit(1);
-                // }
                 _node_x_coords[_coord_ptr] = osmium::geom::detail::lon_to_x(it->lon());
                 _node_y_coords[_coord_ptr] = osmium::geom::detail::lat_to_y(it->lat());
 

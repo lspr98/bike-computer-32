@@ -14,29 +14,29 @@
 
 class BoundingBox {
     public:
-        uint32_t lower_x, lower_y, upper_x, upper_y;
+        int32_t lower_x, lower_y, upper_x, upper_y;
 
         BoundingBox():
             lower_x(0), lower_y(0), upper_x(0), upper_y(0) {};
 
-        BoundingBox(uint32_t lower_x, uint32_t lower_y, uint32_t upper_x, uint32_t upper_y): 
+        BoundingBox(int32_t lower_x, int32_t lower_y, int32_t upper_x, int32_t upper_y): 
             lower_x(lower_x), lower_y(lower_y), upper_x(upper_x), upper_y(upper_y) {};
 
         // Check if two axis aligned 2D-boxes collide
         bool collidesWith(BoundingBox &b) {
             return (upper_x >= b.lower_x) && (b.upper_x >= lower_x) &&
-                    (upper_y >= b.lower_y) && (b.upper_y >= lower_y);
+                    (upper_y >= b.lower_y) && (b.upper_y >= lower_y) && valid();
         }
 
         // Check if a given point is inside the box
-        bool contains(uint32_t x, uint32_t y) {
-            return (lower_x <= x) && (x <= upper_x) && (lower_y <= y) && (y <= upper_y);
+        bool contains(int32_t x, int32_t y) {
+            return (lower_x <= x) && (x <= upper_x) && (lower_y <= y) && (y <= upper_y) && valid();
         }
 
         // Check if a given point is to the top and/or right of the box
         // From the perspective of the point, this means the tile is south and/or west of the point
-        bool isSouthWestOf(uint32_t x, uint32_t y) {
-            return (upper_x < x) || (upper_y < y);
+        bool isSouthWestOf(int32_t x, int32_t y) {
+            return ((upper_x < x) || (upper_y < y)) && valid();
         }
 
         // A bounding box is valid if the corners dont match.
@@ -56,11 +56,13 @@ class BoundingBox {
 class WayBox : public BoundingBox {
     public:
 
+        int way_id;
+
         // default constructor
         WayBox(): BoundingBox() {};
 
         // from explicit coordinates
-        WayBox(uint32_t lower_x, uint32_t lower_y, uint32_t upper_x, uint32_t upper_y) :
+        WayBox(int32_t lower_x, int32_t lower_y, int32_t upper_x, int32_t upper_y) :
             BoundingBox(lower_x, lower_y, upper_x, upper_y) {};
 
         // from way
@@ -75,6 +77,7 @@ class WayBox : public BoundingBox {
             lower_y = bottom_left.y;
             upper_x = upper_right.x;
             upper_y = upper_right.y;
+            way_id = w.id();
         };
 
         // Calculate the number of tiles that collide with the bounding box

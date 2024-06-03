@@ -3,8 +3,6 @@
 
 #include <BoundingBox.hpp>
 
-#define UINT16_T_MAX_VAL 65535
-
 /*
 
     Class to represent a single tile of the map
@@ -34,10 +32,10 @@ public:
     };
 
     // Writes a global mercator coordinate in a uint16_t buffer with coordinates relative to tile origin.
-    void write_global_coord(int x, int y, int16_t* buffer) {
+    void write_global_coord(int32_t x, int32_t y, int16_t* buffer) {
         // Convert global coordinates to local coordinates
-        int x_local = x-lower_x;
-        int y_local = y-lower_y;
+        int32_t x_local = x - lower_x;
+        int32_t y_local = y - lower_y;
         // Edge case: local coordinate is exactly (0, 0) and thus its coordinate aligns with the global coordinate.
         // In this case, simply shift the coordinate by 1. This creates a small (but in most cases not visible) rendering error so its good enough for now
         if(!x_local && !y_local) x_local++;
@@ -47,11 +45,19 @@ public:
             std::cout << "Warning: Skipping negative coordinates.\n";
             return;
         }
-        // Must not be out-of-range before conversion
+
+        // Check if node exceeds maximum coordinate-wise distance
+        if(std::abs(x_local) > INT16_MAX || std::abs(y_local) > INT16_MAX) {
+            // Project to 1/0
+            x_local = 1;
+            y_local = 0;
+        }
+
+        // Final sanity check
         assert(x_local < INT16_MAX && x_local > INT16_MIN);
         assert(y_local < INT16_MAX && y_local > INT16_MIN);
-        buffer[0] = (int16_t) (x - lower_x);
-        buffer[1] = (int16_t) (y - lower_y);
+        buffer[0] = (int16_t) x_local;
+        buffer[1] = (int16_t) y_local;
     }
 
     // Writes a separator (consisting of two consecutive zeros) into a buffer

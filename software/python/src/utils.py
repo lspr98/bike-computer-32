@@ -229,7 +229,7 @@ def read_header(binary_path):
         # Parse header
         for i in range(10):
             bytes_read = f.read(8)
-            is_signed = header_keys[i] in ["map_x", "ma_y"]
+            is_signed = header_keys[i] in ["map_x", "map_y"]
             header[header_keys[i]] = int.from_bytes(bytes_read, byteorder='little', signed=is_signed)
 
     return header
@@ -302,7 +302,7 @@ def read_tile(tile_idx, header, binary_path):
 def plot_tiles(ax, tile_idx_list, header, bin_file_path):
 
     ll_plot = np.array([1e10, 1e10])
-    ur_plot = np.array([0, 0])
+    ur_plot = np.array([-1e10, -1e10])
     # 1. Get the tiles.
     tile_list = [read_tile(idx, header, bin_file_path) for idx in tile_idx_list]
 
